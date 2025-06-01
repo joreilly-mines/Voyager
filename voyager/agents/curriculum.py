@@ -6,7 +6,8 @@ import re
 import voyager.utils as U
 from voyager.prompts import load_prompt
 from voyager.utils.json_utils import fix_and_parse_json
-from langchain.chat_models import ChatOpenAI
+#from langchain.chat_models import ChatOpenAI
+from .LLMWrapper import TransformersLLM
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.vectorstores import Chroma
@@ -15,9 +16,9 @@ from langchain.vectorstores import Chroma
 class CurriculumAgent:
     def __init__(
         self,
-        model_name="gpt-3.5-turbo",
+        model_name="mistralai/Mistral-7B-Instruct-v0.3",
         temperature=0,
-        qa_model_name="gpt-3.5-turbo",
+        qa_model_name="mistralai/Mistral-7B-Instruct-v0.3",
         qa_temperature=0,
         request_timout=120,
         ckpt_dir="ckpt",
@@ -26,15 +27,15 @@ class CurriculumAgent:
         warm_up=None,
         core_inventory_items: str | None = None,
     ):
-        self.llm = ChatOpenAI(
+        self.llm = TransformersLLM(
             model_name=model_name,
             temperature=temperature,
-            request_timeout=request_timout,
+           #request_timeout=request_timout,
         )
-        self.qa_llm = ChatOpenAI(
+        self.qa_llm = TransformersLLM(
             model_name=qa_model_name,
             temperature=qa_temperature,
-            request_timeout=request_timout,
+            #request_timeout=request_timout,
         )
         assert mode in [
             "auto",

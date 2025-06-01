@@ -67,8 +67,23 @@ async function collectAll(
                             );
                             // @ts-ignore
                         } else if (err.name === "NoItem") {
-                            const properties =
-                                bot.registry.blocksByName[closest.name];
+                            const blockName = closest?.name;
+                            if (typeof blockName === 'string') {
+                                const properties = bot.registry.blocksByName[blockName];
+                                const toolKeys = Object.keys(properties.harvestTools || {});
+                                if (toolKeys.length > 0) {
+                                    const leastTool = toolKeys[0];
+                                    // @ts-ignore: TS7015
+                                    const item = bot.registry.items[leastTool];
+                                    if (item) {
+                                        bot.chat(`I need at least a ${item.name} to mine ${blockName}! Skip it!`);
+                                    } else {
+                                        bot.chat(`I need an unknown tool (${leastTool}) to mine ${blockName}, but I don't know what that is!`);
+                                    }
+                                }
+                            }
+                            /*
+                            const properties = bot.registry.blocksByName[closest.name];
                             const leastTool = Object.keys(
                                 properties.harvestTools
                             )[0];
@@ -76,7 +91,7 @@ async function collectAll(
                             bot.chat(
                                 `I need at least a ${item.name} to mine ${closest.name}!  Skip it!`
                             );
-                            return;
+                            return;*/
                         } else if (
                             // @ts-ignore
                             err.name === "NoPath" ||

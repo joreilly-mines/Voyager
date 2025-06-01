@@ -1,7 +1,8 @@
 import os
 
 import voyager.utils as U
-from langchain.chat_models import ChatOpenAI
+#from langchain.chat_models import ChatOpenAI
+from .LLMWrapper import TransformersLLM
 from langchain.embeddings.openai import OpenAIEmbeddings
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.vectorstores import Chroma
@@ -13,17 +14,17 @@ from voyager.control_primitives import load_control_primitives
 class SkillManager:
     def __init__(
         self,
-        model_name="gpt-3.5-turbo",
+        model_name="mistralai/Mistral-7B-Instruct-v0.3",
         temperature=0,
         retrieval_top_k=5,
         request_timout=120,
         ckpt_dir="ckpt",
         resume=False,
     ):
-        self.llm = ChatOpenAI(
+        self.llm = TransformersLLM(
             model_name=model_name,
             temperature=temperature,
-            request_timeout=request_timout,
+            #request_timeout=request_timout,
         )
         U.f_mkdir(f"{ckpt_dir}/skill/code")
         U.f_mkdir(f"{ckpt_dir}/skill/description")
